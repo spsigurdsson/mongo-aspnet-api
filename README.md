@@ -18,11 +18,11 @@ docker run -d -p 27017:27017 --name some-mongo -d mongo
 ```
 
 ## Test
-Is working without mongo, simple Hello World should be returned.
+Test of if the Api is working without mongo
 ```
 curl http://localhost:5000/api/data
 ```
-And with mongo on docker 
+Will return a simple "Hello World". And with mongo on docker 
 ```
 curl http://localhost:5000/api/values
 ```
