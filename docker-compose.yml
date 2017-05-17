@@ -1,7 +1,7 @@
 version: '2'
 
 services:
-  mongo:
+  mongocounter:
     image: mongo
     ports:
       - 27017:27017
@@ -9,11 +9,9 @@ services:
       - mongo:/data/db
   counter:
     depends_on:
-      - mongo
+      - mongocounter
     build: .
     ports:
       - 5000:5000
-    environment:
-      - MONGO_URL=mongodb://mongo:27017/
 volumes:
   mongo:
