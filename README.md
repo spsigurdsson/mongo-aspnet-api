@@ -22,7 +22,16 @@ Test of if the Api is working without mongo
 ```
 curl http://localhost:5000/api/data
 ```
-Will return a simple "Hello World". And with mongo on docker 
+should return a simple "Hello World". 
+
+And with mongo on docker 
 ```
 curl http://localhost:5000/api/values
+```
+should return a 
+```javascript
+{
+  "Time": "2017-05-17T11:33:32.770782+00:00",
+  "Count":  1
+}
 ```
