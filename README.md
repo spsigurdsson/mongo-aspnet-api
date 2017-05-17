@@ -28,10 +28,10 @@ And with mongo on docker
 ```
 curl http://localhost:5000/api/values
 ```
-should return a 
+should return a json with "Time" and "Count", e.g.
 ```javascript
 {
   "Time": "2017-05-17T11:33:32.770782+00:00",
-  "Count":  1
+  "Count":  24
 }
 ```
