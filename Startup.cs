@@ -1,19 +1,17 @@
 using System;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Builder;
 
-namespace mongo_aspnet_api
-{
-    public class Startup
-    {
-        public Startup(IHostingEnvironment env)
-        {
+namespace mongo_aspnet_api {
+    public class Startup {
+        public Startup (IHostingEnvironment env, IConfiguration config) {
+            HostingEnvironment = env;
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -21,30 +19,37 @@ namespace mongo_aspnet_api
                 .AddEnvironmentVariables();
 
                  Configuration = builder.Build();
-
         }
 
-        public IConfigurationRoot Configuration { get; }
+        public IHostingEnvironment HostingEnvironment { get; }
+        public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+            // Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app)
         {
-            services.Configure<Settings>(Configuration);
-            services.AddMvc();
+            app.UseMvcWithDefaultRoute();
+            app.UseStaticFiles();
+        }
+
+        public void ConfigureServices (IServiceCollection services) {
+            if (HostingEnvironment.IsDevelopment ()) {
+                // Development configuration
+            } else {
+                // Staging/Production configuration
+            }
+
+            services.Configure<Settings>(options =>
+            {
+                options.ConnectionString 
+                    = Configuration.GetSection("MongoConnection:ConnectionString").Value;
+                options.Database 
+                    = Configuration.GetSection("MongoConnection:Database").Value;
+            });
+
 
             services.AddSingleton<IMongoAsyncRepository<DateCounter>, DateCounterAsyncMongoRepository>();
 
-            // Add framework services.
             services.AddMvc();
-        }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
-        {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-
-            app.UseMvc();
         }
     }
 }

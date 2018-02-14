@@ -13,7 +13,7 @@ namespace mongo_aspnet_api
 
         public DateCounterAsyncMongoRepository(IOptions<Settings> settings)
         {
-            var client = new MongoClient(settings.Value.MongoConnection);
+            var client = new MongoClient(settings.Value.ConnectionString);
             var database = client.GetDatabase(settings.Value.Database);
 
             _fundingDates = database.GetCollection<DateCounter>("dateCounter");
